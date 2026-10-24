@@ -22,6 +22,15 @@ const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$/;
 const PHONE_PATTERN = /^[0-9+\-\s()]+$/;
 const MAX_PHONES = 10;
 
+/** Formato del número de documento por tipo (reglas peruanas). */
+const DOC_FORMATS: Record<string, { pattern: RegExp; message: string }> = {
+  DNI: { pattern: /^\d{8}$/, message: 'El DNI debe tener 8 dígitos.' },
+  RUC: { pattern: /^20\d{9}$/, message: 'El RUC debe tener 11 dígitos y empezar con 20.' },
+  CE: { pattern: /^[0-9A-Za-z]{9}$/, message: 'El carné de extranjería debe tener 9 caracteres.' },
+  PAS: { pattern: /^[0-9A-Za-z]{6,12}$/, message: 'El pasaporte debe tener entre 6 y 12 caracteres.' },
+  PARTIDA: { pattern: /^\d{6,15}$/, message: 'La partida registral debe tener entre 6 y 15 dígitos.' }
+};
+
 /**
  * Alta y edición de entidades (misma página). Los datos propios de persona
  * natural o jurídica se muestran según el tipo de entidad elegido; la API
@@ -44,6 +53,9 @@ export class EntityFormComponent implements OnInit {
 
   /** 0 = alta; mayor que 0 = edición. */
   entityId = 0;
+
+  /** Mensaje de validación del número de documento según el tipo elegido. */
+  documentNumberMessage = 'El número de documento debe tener entre 6 y 20 caracteres.';
 
   readonly form = new FormGroup({
     entityTypeId: new FormControl<number | null>(null, [Validators.required]),
@@ -84,6 +96,7 @@ export class EntityFormComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.entityId = Number(this.route.snapshot.paramMap.get('id')) || 0;
+    this.form.controls.documentTypeId.valueChanges.subscribe(() => this.applyDocumentValidators());
 
     try {
       this.entityTypes.set(await this.catalogs.getEntityTypes());
@@ -193,6 +206,28 @@ export class EntityFormComponent implements OnInit {
     if (current && !this.documentTypes().some((candidate) => Number(candidate.id) === Number(current))) {
       this.form.controls.documentTypeId.setValue(null);
     }
+
+    this.applyDocumentValidators();
+  }
+
+  /** Ajusta las validaciones del número de documento al tipo de documento elegido. */
+  private applyDocumentValidators(): void {
+    const documentTypeId = this.form.controls.documentTypeId.value;
+    const code = this.documentTypes().find(
+      (candidate) => Number(candidate.id) === Number(documentTypeId)
+    )?.code;
+    const format = code ? DOC_FORMATS[code] : undefined;
+
+    this.documentNumberMessage =
+      format?.message ?? 'El número de documento debe tener entre 6 y 20 caracteres.';
+
+    const validators = [Validators.required, Validators.minLength(6), Validators.maxLength(20)];
+    if (format) {
+      validators.push(Validators.pattern(format.pattern));
+    }
+
+    this.form.controls.documentNumber.setValidators(validators);
+    this.form.controls.documentNumber.updateValueAndValidity({ emitEvent: false });
   }
 
   private setCategoryValidators(category: string): void {

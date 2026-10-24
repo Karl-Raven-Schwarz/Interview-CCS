@@ -11,6 +11,7 @@ public static class DbErrors
     public const int NaturalDataRequired = 50004;
     public const int LegalDataRequired = 50005;
     public const int EntityNotFound = 50010;
+    public const int DocumentInvalidFormat = 50011;
 
     public const int ThrowMin = TypeInvalid;
     public const int ThrowMax = 50099;
@@ -45,6 +46,10 @@ public static class DbErrors
 
             case DocumentNotAllowed:
                 error = Error.Validation("document_type.not_allowed", exception.Message);
+                return true;
+
+            case DocumentInvalidFormat:
+                error = Error.Validation("document.invalid_format", exception.Message);
                 return true;
 
             case NaturalDataRequired:

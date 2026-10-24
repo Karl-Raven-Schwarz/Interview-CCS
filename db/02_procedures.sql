@@ -180,6 +180,24 @@ BEGIN
             WHERE Id = @DocumentTypeId AND AllowedFor IN ('B', @Category))
             THROW 50002, 'El tipo de documento no está permitido para este tipo de entidad.', 1;
 
+        IF NOT EXISTS (
+            SELECT 1
+            FROM dbo.DocumentType
+            WHERE Id = @DocumentTypeId
+              AND (
+                    (Code = 'DNI'     AND LEN(@DocumentNumber) = 8
+                                      AND @DocumentNumber NOT LIKE '%[^0-9]%')
+                 OR (Code = 'RUC'     AND LEN(@DocumentNumber) = 11
+                                      AND @DocumentNumber NOT LIKE '%[^0-9]%'
+                                      AND LEFT(@DocumentNumber, 2) = '20')
+                 OR (Code = 'CE'      AND LEN(@DocumentNumber) = 9
+                                      AND @DocumentNumber NOT LIKE '%[^0-9A-Za-z]%')
+                 OR (Code = 'PAS'     AND LEN(@DocumentNumber) BETWEEN 6 AND 12
+                                      AND @DocumentNumber NOT LIKE '%[^0-9A-Za-z]%')
+                 OR (Code = 'PARTIDA' AND LEN(@DocumentNumber) BETWEEN 6 AND 15
+                                      AND @DocumentNumber NOT LIKE '%[^0-9]%')))
+            THROW 50011, 'El número de documento no corresponde al formato del tipo seleccionado.', 1;
+
         IF EXISTS (
             SELECT 1 FROM dbo.Entity
             WHERE DocumentTypeId = @DocumentTypeId AND DocumentNumber = @DocumentNumber)
@@ -270,6 +288,24 @@ BEGIN
             SELECT 1 FROM dbo.DocumentType
             WHERE Id = @DocumentTypeId AND AllowedFor IN ('B', @Category))
             THROW 50002, 'El tipo de documento no está permitido para este tipo de entidad.', 1;
+
+        IF NOT EXISTS (
+            SELECT 1
+            FROM dbo.DocumentType
+            WHERE Id = @DocumentTypeId
+              AND (
+                    (Code = 'DNI'     AND LEN(@DocumentNumber) = 8
+                                      AND @DocumentNumber NOT LIKE '%[^0-9]%')
+                 OR (Code = 'RUC'     AND LEN(@DocumentNumber) = 11
+                                      AND @DocumentNumber NOT LIKE '%[^0-9]%'
+                                      AND LEFT(@DocumentNumber, 2) = '20')
+                 OR (Code = 'CE'      AND LEN(@DocumentNumber) = 9
+                                      AND @DocumentNumber NOT LIKE '%[^0-9A-Za-z]%')
+                 OR (Code = 'PAS'     AND LEN(@DocumentNumber) BETWEEN 6 AND 12
+                                      AND @DocumentNumber NOT LIKE '%[^0-9A-Za-z]%')
+                 OR (Code = 'PARTIDA' AND LEN(@DocumentNumber) BETWEEN 6 AND 15
+                                      AND @DocumentNumber NOT LIKE '%[^0-9]%')))
+            THROW 50011, 'El número de documento no corresponde al formato del tipo seleccionado.', 1;
 
         IF EXISTS (
             SELECT 1 FROM dbo.Entity

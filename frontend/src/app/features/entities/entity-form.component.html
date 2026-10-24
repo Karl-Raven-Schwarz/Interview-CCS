@@ -52,7 +52,11 @@
               placeholder="44556677" />
             @if (form.controls.documentNumber.touched && form.controls.documentNumber.invalid) {
               <div class="invalid-feedback d-block">
-                El número de documento es obligatorio (6 a 20 caracteres).
+                @if (form.controls.documentNumber.hasError('required')) {
+                  El número de documento es obligatorio.
+                } @else {
+                  {{ documentNumberMessage }}
+                }
               </div>
             }
             @if (fieldMessage('documentNumber'); as message) {

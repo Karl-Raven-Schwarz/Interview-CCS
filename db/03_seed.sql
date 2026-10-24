@@ -23,13 +23,16 @@ GO
 IF NOT EXISTS (SELECT 1 FROM dbo.DocumentType WHERE Code = 'DNI')
     INSERT INTO dbo.DocumentType (Code, Name, AllowedFor) VALUES ('DNI', 'DNI', 'N');
 IF NOT EXISTS (SELECT 1 FROM dbo.DocumentType WHERE Code = 'CE')
-    INSERT INTO dbo.DocumentType (Code, Name, AllowedFor) VALUES ('CE', 'Carné de extranjería', 'B');
+    INSERT INTO dbo.DocumentType (Code, Name, AllowedFor) VALUES ('CE', 'Carné de extranjería', 'N');
 IF NOT EXISTS (SELECT 1 FROM dbo.DocumentType WHERE Code = 'PAS')
-    INSERT INTO dbo.DocumentType (Code, Name, AllowedFor) VALUES ('PAS', 'Pasaporte', 'B');
+    INSERT INTO dbo.DocumentType (Code, Name, AllowedFor) VALUES ('PAS', 'Pasaporte', 'N');
 IF NOT EXISTS (SELECT 1 FROM dbo.DocumentType WHERE Code = 'RUC')
     INSERT INTO dbo.DocumentType (Code, Name, AllowedFor) VALUES ('RUC', 'RUC', 'L');
 IF NOT EXISTS (SELECT 1 FROM dbo.DocumentType WHERE Code = 'PARTIDA')
     INSERT INTO dbo.DocumentType (Code, Name, AllowedFor) VALUES ('PARTIDA', 'Partida registral', 'L');
+
+
+UPDATE dbo.DocumentType SET AllowedFor = 'N' WHERE Code IN ('CE', 'PAS');
 GO
 
 /* ------------------------------------------------------------
