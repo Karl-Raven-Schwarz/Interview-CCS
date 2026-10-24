@@ -1,4 +1,3 @@
-# Locales (no commitear)
 local/
 
 # .NET
@@ -8,8 +7,6 @@ logs/
 .vs/
 *.user
 *.suo
-
-# Seguridad (back): configuración con secretos y logs con datos sensibles
 *.log
 appsettings.Development.json
 appsettings.Local.json
