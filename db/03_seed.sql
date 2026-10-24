@@ -6,8 +6,6 @@ GO
 
 /* ------------------------------------------------------------
    Catálogo de tipos de entidad
-   Category = 'N' -> subtipo NaturalPerson
-   Category = 'L' -> subtipo LegalPerson
    ------------------------------------------------------------ */
 IF NOT EXISTS (SELECT 1 FROM dbo.EntityType WHERE Code = 'NATURAL')
     INSERT INTO dbo.EntityType (Code, Name, Category) VALUES ('NATURAL', 'Persona natural', 'N');
@@ -21,7 +19,6 @@ GO
 
 /* ------------------------------------------------------------
    Catálogo de tipos de documento
-   AllowedFor: 'N' solo natural, 'L' solo jurídica, 'B' ambos
    ------------------------------------------------------------ */
 IF NOT EXISTS (SELECT 1 FROM dbo.DocumentType WHERE Code = 'DNI')
     INSERT INTO dbo.DocumentType (Code, Name, AllowedFor) VALUES ('DNI', 'DNI', 'N');
@@ -36,17 +33,15 @@ IF NOT EXISTS (SELECT 1 FROM dbo.DocumentType WHERE Code = 'PARTIDA')
 GO
 
 /* ------------------------------------------------------------
-   Usuario de la aplicación (hash BCrypt de 'Admin123!')
+   Usuario de la aplicación
    ------------------------------------------------------------ */
 IF NOT EXISTS (SELECT 1 FROM dbo.AppUser WHERE Username = 'admin')
     INSERT INTO dbo.AppUser (Username, PasswordHash, Role)
-    VALUES ('admin', '$2b$10$kG500wBA77hHLRTnte2xlePA.yR.xIOkXE3R6XBGZYGUCqPawjzo.', 'Admin');
+    VALUES ('admin', 'AQAAAAIACSfAAAAAEBgq05Dax4YJ+lIgz8kuG406odyRZI9Kwn+2S5IMfeNRbOlRTBD7G3sVzwtq8KI/sQ==', 'Admin');
 GO
 
 /* ------------------------------------------------------------
-   Entidades de ejemplo (solo si la tabla está vacía)
-   Se registran a través del procedimiento almacenado, que es la
-   única puerta de entrada del CRUD.
+   Entidades de ejemplo
    ------------------------------------------------------------ */
 IF NOT EXISTS (SELECT 1 FROM dbo.Entity)
 BEGIN

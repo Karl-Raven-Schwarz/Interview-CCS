@@ -124,7 +124,7 @@ GO
 CREATE TABLE dbo.AppUser (
     Id           INT          IDENTITY (1, 1) NOT NULL,
     Username     VARCHAR(50)  NOT NULL,
-    PasswordHash VARCHAR(100) NOT NULL,
+    PasswordHash VARCHAR(200) NOT NULL,
     Role         VARCHAR(30)  NOT NULL CONSTRAINT DF_AppUser_Role DEFAULT ('Admin'),
     IsActive     BIT          NOT NULL CONSTRAINT DF_AppUser_IsActive DEFAULT (1),
     CONSTRAINT PK_AppUser PRIMARY KEY (Id),

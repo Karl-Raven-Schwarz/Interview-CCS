@@ -1,0 +1,7 @@
+@CCS.Entities.Api_HostAddress = http://localhost:5180
+
+### Documentación OpenAPI de la API
+GET {{CCS.Entities.Api_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
