@@ -1,0 +1,113 @@
+<div class="card card-ccs">
+  <div class="card-body">
+    @if (loading()) {
+      <div class="text-center text-secondary py-5">
+        <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+        Cargando entidad...
+      </div>
+    } @else if (error()) {
+      <div class="alert alert-danger py-2 small" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>{{ error() }}
+      </div>
+    } @else {
+      @if (entity(); as item) {
+        <!-- Encabezado -->
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-4">
+          <div>
+            <h2 class="h5 fw-semibold mb-2">{{ displayName }}</h2>
+            @if (item.isActive) {
+              <span class="badge-soft badge-soft-success rounded-pill">Activo</span>
+            } @else {
+              <span class="badge-soft badge-soft-danger rounded-pill">Inactivo</span>
+            }
+          </div>
+          <div class="d-flex gap-2">
+            <a class="btn btn-brand" [routerLink]="['/entities', item.id, 'edit']">
+              <i class="bi bi-pencil me-1"></i>Editar
+            </a>
+            <a class="btn btn-outline-secondary" routerLink="/entities">
+              <i class="bi bi-arrow-left me-1"></i>Volver
+            </a>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <!-- Identidad -->
+          <div class="col-lg-6">
+            <h3 class="h6 fw-semibold mb-2">Identidad</h3>
+            <dl class="row mb-0">
+              <dt class="col-5 text-secondary small fw-normal">Categoría</dt>
+              <dd class="col-7">{{ item.entityCategory === 'N' ? 'Natural' : 'Jurídica' }}</dd>
+              <dt class="col-5 text-secondary small fw-normal">Tipo de entidad</dt>
+              <dd class="col-7">{{ item.entityTypeName }}</dd>
+              <dt class="col-5 text-secondary small fw-normal">Tipo de documento</dt>
+              <dd class="col-7">{{ item.documentTypeName || item.documentTypeCode }}</dd>
+              <dt class="col-5 text-secondary small fw-normal">Número de documento</dt>
+              <dd class="col-7">{{ item.documentNumber }}</dd>
+            </dl>
+
+            @if (isNatural) {
+              <h3 class="h6 fw-semibold mb-2 mt-4">Datos de la persona natural</h3>
+              <dl class="row mb-0">
+                <dt class="col-5 text-secondary small fw-normal">Nombres</dt>
+                <dd class="col-7">{{ item.names || '—' }}</dd>
+                <dt class="col-5 text-secondary small fw-normal">Apellido paterno</dt>
+                <dd class="col-7">{{ item.paternalSurname || '—' }}</dd>
+                <dt class="col-5 text-secondary small fw-normal">Apellido materno</dt>
+                <dd class="col-7">{{ item.maternalSurname || '—' }}</dd>
+                <dt class="col-5 text-secondary small fw-normal">Edad</dt>
+                <dd class="col-7">{{ item.age ?? '—' }}</dd>
+                <dt class="col-5 text-secondary small fw-normal">Sexo</dt>
+                <dd class="col-7">{{ sexLabel }}</dd>
+              </dl>
+            } @else {
+              <h3 class="h6 fw-semibold mb-2 mt-4">Datos de la persona jurídica</h3>
+              <dl class="row mb-0">
+                <dt class="col-5 text-secondary small fw-normal">Razón social</dt>
+                <dd class="col-7">{{ item.legalName || '—' }}</dd>
+                <dt class="col-5 text-secondary small fw-normal">Nombre comercial</dt>
+                <dd class="col-7">{{ item.tradeName || '—' }}</dd>
+                <dt class="col-5 text-secondary small fw-normal">Persona de contacto</dt>
+                <dd class="col-7">{{ item.contactName || '—' }}</dd>
+              </dl>
+            }
+          </div>
+
+          <!-- Contacto y auditoría -->
+          <div class="col-lg-6">
+            <h3 class="h6 fw-semibold mb-2">Contacto</h3>
+            <dl class="row mb-0">
+              <dt class="col-5 text-secondary small fw-normal">Correo</dt>
+              <dd class="col-7">{{ item.email || '—' }}</dd>
+              <dt class="col-5 text-secondary small fw-normal">Dirección</dt>
+              <dd class="col-7">{{ item.address || '—' }}</dd>
+              <dt class="col-5 text-secondary small fw-normal">Teléfonos</dt>
+              <dd class="col-7">
+                @if ((item.phones ?? []).length === 0) {
+                  <span class="text-secondary">Sin teléfonos registrados.</span>
+                } @else {
+                  @for (phone of item.phones ?? []; track $index) {
+                    <div>
+                      {{ phone.number }}
+                      @if (phone.label) {
+                        <span class="small text-secondary ms-1">{{ phone.label }}</span>
+                      }
+                    </div>
+                  }
+                }
+              </dd>
+            </dl>
+
+            <h3 class="h6 fw-semibold mb-2 mt-4">Auditoría</h3>
+            <dl class="row mb-0">
+              <dt class="col-5 text-secondary small fw-normal">Creado</dt>
+              <dd class="col-7">{{ item.createdAt ? (item.createdAt | date: 'dd/MM/yyyy HH:mm') : '—' }}</dd>
+              <dt class="col-5 text-secondary small fw-normal">Actualizado</dt>
+              <dd class="col-7">{{ item.updatedAt ? (item.updatedAt | date: 'dd/MM/yyyy HH:mm') : '—' }}</dd>
+            </dl>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

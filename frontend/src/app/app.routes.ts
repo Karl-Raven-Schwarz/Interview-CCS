@@ -28,6 +28,11 @@ export const routes: Routes = [
         path: 'entities/:id/edit',
         loadComponent: () =>
           import('./features/entities/entity-form.component').then((m) => m.EntityFormComponent)
+      },
+      {
+        path: 'entities/:id',
+        loadComponent: () =>
+          import('./features/entities/entity-detail.component').then((m) => m.EntityDetailComponent)
       }
     ]
   },

@@ -1,5 +1,5 @@
 <div class="card card-ccs">
-  <div class="card-body">
+  <div class="card-body toolbar-ccs">
     <!-- Barra de herramientas -->
     <div class="row g-2 align-items-end">
       <div class="col-12 col-lg-5">
@@ -46,7 +46,9 @@
       <thead>
         <tr>
           <th>Nombre</th>
-          <th>Tipo</th>
+          <th>Categoría</th>
+          <th>Tipo de entidad</th>
+          <th>Tipo doc.</th>
           <th>Documento</th>
           <th>Contacto</th>
           <th>Estado</th>
@@ -56,41 +58,28 @@
       <tbody>
         @if (loading()) {
           <tr>
-            <td colspan="6" class="text-center text-secondary py-5">
+            <td colspan="8" class="text-center text-secondary py-5">
               <span class="spinner-border spinner-border-sm me-2" role="status"></span>
               Cargando entidades...
             </td>
           </tr>
         } @else if (items().length === 0) {
           <tr>
-            <td colspan="6" class="text-center text-secondary py-5">
+            <td colspan="8" class="text-center text-secondary py-5">
               No hay entidades que coincidan con la búsqueda.
             </td>
           </tr>
         } @else {
           @for (item of items(); track item.id) {
             <tr>
-              <td>
-                <div class="fw-semibold">{{ item.displayName }}</div>
-                @if (item.email) {
-                  <div class="small text-secondary">{{ item.email }}</div>
-                }
-              </td>
-              <td>
-                <span class="badge-soft rounded-pill" [class]="item.entityCategory === 'N' ? 'badge-soft-primary' : 'badge-soft-secondary'">
-                  {{ item.entityCategory === 'N' ? 'Natural' : 'Jurídica' }}
-                </span>
-                <div class="small text-secondary mt-1">{{ item.entityTypeName }}</div>
-              </td>
-              <td>
-                <span class="badge-soft badge-soft-secondary rounded-pill me-1">
-                  {{ item.documentTypeCode }}
-                </span>
-                {{ item.documentNumber }}
-              </td>
+              <td class="fw-semibold">{{ item.displayName }}</td>
+              <td>{{ item.entityCategory === 'N' ? 'Natural' : 'Jurídica' }}</td>
+              <td>{{ item.entityTypeName }}</td>
+              <td>{{ item.documentTypeCode }}</td>
+              <td>{{ item.documentNumber }}</td>
               <td>
                 <div>{{ item.email || '—' }}</div>
-                <div class="small text-secondary">{{ item.phoneCount }} teléfono(s)</div>
+                <div class="cell-sub">{{ item.phoneCount }} teléfono(s)</div>
               </td>
               <td>
                 @if (item.isActive) {
@@ -100,11 +89,14 @@
                 }
               </td>
               <td class="text-end text-nowrap">
-                <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/entities', item.id, 'edit']">
-                  <i class="bi bi-pencil me-1"></i>Editar
+                <a class="btn-table me-1" [routerLink]="['/entities', item.id]">
+                  <i class="bi bi-eye"></i>Ver
                 </a>
-                <button type="button" class="btn btn-sm btn-outline-danger" (click)="pendingDelete.set(item)">
-                  <i class="bi bi-trash me-1"></i>Eliminar
+                <a class="btn-table me-1" [routerLink]="['/entities', item.id, 'edit']">
+                  <i class="bi bi-pencil"></i>Editar
+                </a>
+                <button type="button" class="btn-table btn-table-danger" (click)="pendingDelete.set(item)">
+                  <i class="bi bi-trash"></i>Eliminar
                 </button>
               </td>
             </tr>

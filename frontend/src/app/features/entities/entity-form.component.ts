@@ -179,8 +179,10 @@ export class EntityFormComponent implements OnInit {
     return key ? errors[key].join(' ') : null;
   }
 
-  private async applyType(entityTypeId: number | null): Promise<void> {
-    const type = this.entityTypes().find((candidate) => Number(candidate.id) === entityTypeId) ?? null;
+  private async applyType(entityTypeId: number | string | null): Promise<void> {
+    // El select entrega el id como texto y patchForm como número: se comparan como número.
+    const type =
+      this.entityTypes().find((candidate) => Number(candidate.id) === Number(entityTypeId)) ?? null;
     const category = type?.category ?? 'N';
 
     this.category.set(category);
@@ -188,7 +190,7 @@ export class EntityFormComponent implements OnInit {
     this.documentTypes.set(await this.catalogs.getDocumentTypes({ category }));
 
     const current = this.form.controls.documentTypeId.value;
-    if (current && !this.documentTypes().some((candidate) => Number(candidate.id) === current)) {
+    if (current && !this.documentTypes().some((candidate) => Number(candidate.id) === Number(current))) {
       this.form.controls.documentTypeId.setValue(null);
     }
   }

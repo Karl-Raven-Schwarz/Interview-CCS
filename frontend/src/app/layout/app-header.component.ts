@@ -51,6 +51,9 @@ export class AppHeaderComponent implements OnInit, OnDestroy {
     if (/^\/entities\/\d+\/edit/.test(url)) {
       return 'Editar entidad';
     }
+    if (/^\/entities\/\d+/.test(url)) {
+      return 'Detalle de entidad';
+    }
     return 'Entidades';
   }
 }
