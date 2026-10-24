@@ -1,0 +1,210 @@
+/* Interfaz CCS: Bootstrap 5.3 con la paleta de TailAdmin (MIT) traducida de Tailwind. */
+
+:root {
+  --ccs-primary: #465fff;
+  --ccs-primary-dark: #3641f5;
+  --ccs-page: #f1f5f9;
+  --ccs-text: #1c273c;
+  --ccs-muted: #64748b;
+  --ccs-border: #e2e8f0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;
+  background: var(--ccs-page);
+  color: var(--ccs-text);
+  font-family: Inter, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+/* --- Shell: header + contenido --- */
+
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.875rem 1.5rem;
+  background: #fff;
+  border-bottom: 1px solid var(--ccs-border);
+}
+
+.app-content {
+  padding: 1.5rem;
+}
+
+.dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1025;
+  background: rgb(15 23 42 / 0.5);
+}
+
+/* Fondo del modal de borrado. */
+.app-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1035;
+  background: rgb(15 23 42 / 0.5);
+}
+
+/* --- Botones, tarjetas, tablas --- */
+
+.btn-brand {
+  color: #fff;
+  background: var(--ccs-primary);
+  border-color: var(--ccs-primary);
+}
+
+.btn-brand:hover,
+.btn-brand:focus {
+  color: #fff;
+  background: var(--ccs-primary-dark);
+  border-color: var(--ccs-primary-dark);
+}
+
+.card-ccs {
+  border: 0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.06);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.table-ccs {
+  margin-bottom: 0;
+}
+
+.table-ccs thead th {
+  padding: 0.75rem 1rem;
+  color: var(--ccs-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: #f8fafc;
+  border-bottom: 1px solid var(--ccs-border);
+}
+
+.table-ccs tbody td {
+  padding: 0.875rem 1rem;
+  vertical-align: middle;
+  border-color: #eef2f7;
+}
+
+/* --- Insignias suaves --- */
+
+.badge-soft {
+  padding: 0.4em 0.7em;
+  font-weight: 600;
+}
+
+.badge-soft-primary {
+  color: var(--ccs-primary);
+  background: #eef2ff;
+}
+
+.badge-soft-success {
+  color: #12b76a;
+  background: #e7f8f0;
+}
+
+.badge-soft-danger {
+  color: #f04438;
+  background: #feeceb;
+}
+
+.badge-soft-secondary {
+  color: var(--ccs-muted);
+  background: #eef2f6;
+}
+
+/* --- Formularios --- */
+
+.form-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.form-control,
+.form-select {
+  padding: 0.55rem 0.75rem;
+  border-color: #dbe1ea;
+  border-radius: 0.5rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--ccs-primary);
+  box-shadow: 0 0 0 0.2rem rgb(70 95 255 / 0.15);
+}
+
+.invalid-feedback {
+  font-size: 0.8125rem;
+}
+
+/* --- Menú de usuario --- */
+
+.user-avatar {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ccs-primary);
+  color: #fff;
+  font-weight: 600;
+}
+
+.user-dropdown .dropdown-menu {
+  z-index: 1030;
+  border: 0;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 0.12);
+}
+
+/* --- Página de login --- */
+
+/* Marca "CCS" de la tarjeta de login. */
+.brand-mark {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border-radius: 0.75rem;
+  background: var(--ccs-primary);
+  font-weight: 700;
+}
+
+.auth-page {
+  display: grid;
+  min-height: 100vh;
+  padding: 1.5rem;
+  place-items: center;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  border: 0;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 12px 32px rgb(15 23 42 / 0.08);
+}

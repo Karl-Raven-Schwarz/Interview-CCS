@@ -1,0 +1,276 @@
+@if (loading()) {
+  <div class="card card-ccs p-5 text-center text-secondary">
+    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+    Cargando datos de la entidad...
+  </div>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="save()">
+    @if (error()) {
+      <div class="alert alert-danger py-2 small" role="alert">
+        <i class="bi bi-exclamation-triangle me-1"></i>{{ error() }}
+      </div>
+    }
+
+    <!-- Datos generales -->
+    <div class="card card-ccs mb-3">
+      <div class="card-body">
+        <h2 class="h6 fw-semibold mb-3">Datos generales</h2>
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <label class="form-label" for="entityTypeId">Tipo de entidad *</label>
+            <select
+              id="entityTypeId"
+              class="form-select"
+              formControlName="entityTypeId"
+              (change)="onTypeChange()">
+              @for (type of entityTypes(); track type.id) {
+                <option [value]="type.id">{{ type.name }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="col-12 col-md-3">
+            <label class="form-label" for="documentTypeId">Tipo de documento *</label>
+            <select id="documentTypeId" class="form-select" formControlName="documentTypeId">
+              <option [value]="null">Seleccione...</option>
+              @for (documentType of documentTypes(); track documentType.id) {
+                <option [value]="documentType.id">{{ documentType.name }}</option>
+              }
+            </select>
+            @if (fieldMessage('documentTypeId'); as message) {
+              <div class="invalid-feedback d-block">{{ message }}</div>
+            }
+          </div>
+
+          <div class="col-12 col-md-5">
+            <label class="form-label" for="documentNumber">Número de documento *</label>
+            <input
+              id="documentNumber"
+              type="text"
+              class="form-control"
+              formControlName="documentNumber"
+              placeholder="44556677" />
+            @if (form.controls.documentNumber.touched && form.controls.documentNumber.invalid) {
+              <div class="invalid-feedback d-block">
+                El número de documento es obligatorio (6 a 20 caracteres).
+              </div>
+            }
+            @if (fieldMessage('documentNumber'); as message) {
+              <div class="invalid-feedback d-block">{{ message }}</div>
+            }
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="email">Correo</label>
+            <input
+              id="email"
+              type="email"
+              class="form-control"
+              formControlName="email"
+              placeholder="contacto@empresa.pe" />
+            @if (form.controls.email.touched && form.controls.email.invalid) {
+              <div class="invalid-feedback d-block">El correo no tiene un formato válido.</div>
+            }
+            @if (fieldMessage('email'); as message) {
+              <div class="invalid-feedback d-block">{{ message }}</div>
+            }
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label class="form-label" for="address">Dirección</label>
+            <input
+              id="address"
+              type="text"
+              class="form-control"
+              formControlName="address"
+              placeholder="Arequipa 123" />
+            @if (fieldMessage('address'); as message) {
+              <div class="invalid-feedback d-block">{{ message }}</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Persona natural -->
+    @if (category() === 'N') {
+      <div class="card card-ccs mb-3">
+        <div class="card-body">
+          <h2 class="h6 fw-semibold mb-3">Datos de la persona natural</h2>
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="names">Nombres *</label>
+              <input id="names" type="text" class="form-control" formControlName="names" />
+              @if (form.controls.names.touched && form.controls.names.invalid) {
+                <div class="invalid-feedback d-block">Los nombres son obligatorios.</div>
+              }
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="paternalSurname">Apellido paterno *</label>
+              <input
+                id="paternalSurname"
+                type="text"
+                class="form-control"
+                formControlName="paternalSurname" />
+              @if (form.controls.paternalSurname.touched && form.controls.paternalSurname.invalid) {
+                <div class="invalid-feedback d-block">El apellido paterno es obligatorio.</div>
+              }
+            </div>
+
+            <div class="col-12 col-md-4">
+              <label class="form-label" for="maternalSurname">Apellido materno *</label>
+              <input
+                id="maternalSurname"
+                type="text"
+                class="form-control"
+                formControlName="maternalSurname" />
+              @if (form.controls.maternalSurname.touched && form.controls.maternalSurname.invalid) {
+                <div class="invalid-feedback d-block">El apellido materno es obligatorio.</div>
+              }
+            </div>
+
+            <div class="col-6 col-md-3">
+              <label class="form-label" for="age">Edad *</label>
+              <input
+                id="age"
+                type="number"
+                class="form-control"
+                formControlName="age"
+                min="1"
+                max="130" />
+              @if (form.controls.age.touched && form.controls.age.invalid) {
+                <div class="invalid-feedback d-block">La edad debe estar entre 1 y 130.</div>
+              }
+            </div>
+
+            <div class="col-6 col-md-3">
+              <label class="form-label" for="sex">Sexo *</label>
+              <select id="sex" class="form-select" formControlName="sex">
+                <option [value]="null">Seleccione...</option>
+                <option value="M">Masculino</option>
+                <option value="F">Femenino</option>
+              </select>
+              @if (form.controls.sex.touched && form.controls.sex.invalid) {
+                <div class="invalid-feedback d-block">El sexo es obligatorio.</div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <!-- Persona jurídica -->
+      <div class="card card-ccs mb-3">
+        <div class="card-body">
+          <h2 class="h6 fw-semibold mb-3">Datos de la persona jurídica</h2>
+          <div class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label" for="legalName">Razón social *</label>
+              <input id="legalName" type="text" class="form-control" formControlName="legalName" />
+              @if (form.controls.legalName.touched && form.controls.legalName.invalid) {
+                <div class="invalid-feedback d-block">La razón social es obligatoria.</div>
+              }
+              @if (fieldMessage('legalName'); as message) {
+                <div class="invalid-feedback d-block">{{ message }}</div>
+              }
+            </div>
+
+            <div class="col-12 col-md-3">
+              <label class="form-label" for="tradeName">Nombre comercial</label>
+              <input id="tradeName" type="text" class="form-control" formControlName="tradeName" />
+            </div>
+
+            <div class="col-12 col-md-3">
+              <label class="form-label" for="contactName">Persona de contacto</label>
+              <input id="contactName" type="text" class="form-control" formControlName="contactName" />
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Teléfonos -->
+    <div class="card card-ccs mb-3">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h6 fw-semibold mb-0">Teléfonos</h2>
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm"
+            (click)="addPhone()"
+            [disabled]="phones.length >= 10">
+            <i class="bi bi-plus-lg me-1"></i>Agregar
+          </button>
+        </div>
+
+        @if (phones.length === 0) {
+          <p class="small text-secondary mb-0">
+            Sin teléfonos registrados. Usa "Agregar" para añadir uno (máximo 10).
+          </p>
+        }
+
+        <div formArrayName="phones">
+          @for (phone of phones.controls; track $index) {
+            <div class="row g-2 mb-2" [formGroupName]="$index">
+              <div class="col-12 col-md-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="number"
+                  placeholder="999888777"
+                  aria-label="Número de teléfono" />
+                @if (phone.controls.number.touched && phone.controls.number.invalid) {
+                  <div class="invalid-feedback d-block">
+                    El teléfono debe tener entre 6 y 20 caracteres (dígitos, espacios y + - ( )).
+                  </div>
+                }
+              </div>
+              <div class="col-8 col-md-5">
+                <input
+                  type="text"
+                  class="form-control"
+                  formControlName="label"
+                  placeholder="Etiqueta (Móvil, Casa, Central...)"
+                  aria-label="Etiqueta del teléfono" />
+              </div>
+              <div class="col-4 col-md-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-danger w-100"
+                  (click)="removePhone($index)"
+                  aria-label="Quitar teléfono">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado (solo edición) -->
+    @if (isEdit) {
+      <div class="card card-ccs mb-3">
+        <div class="card-body">
+          <h2 class="h6 fw-semibold mb-3">Estado</h2>
+          <div class="form-check form-switch">
+            <input id="isActive" class="form-check-input" type="checkbox" formControlName="isActive" />
+            <label class="form-check-label" for="isActive">Entidad activa</label>
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="card card-ccs">
+      <div class="card-body d-flex justify-content-end gap-2">
+        <a class="btn btn-outline-secondary" routerLink="/entities">Cancelar</a>
+        <button type="submit" class="btn btn-brand" [disabled]="saving()">
+          @if (saving()) {
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+          }
+          Guardar
+        </button>
+      </div>
+    </div>
+  </form>
+}

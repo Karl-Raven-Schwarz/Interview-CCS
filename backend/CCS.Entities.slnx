@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="CCS.Entities.Api/CCS.Entities.Api.csproj" />
+  </Folder>
+</Solution>

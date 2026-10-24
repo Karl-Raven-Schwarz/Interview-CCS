@@ -1,0 +1,157 @@
+@host = {{CCS.Entities.Api_HostAddress}}
+
+### 1. Login — el token queda en {{token}}
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "Admin123!"
+}
+
+@token = {{login.response.body.$.token}}
+
+### 1b. Login con credenciales malas (esperado: 401)
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{ "username": "admin", "password": "mala" }
+
+### 2. Catálogo de tipos de entidad
+GET {{host}}/api/catalogs/entity-types
+Authorization: Bearer {{token}}
+
+### 2b. Tipos de documento de persona natural
+GET {{host}}/api/catalogs/document-types?category=N
+Authorization: Bearer {{token}}
+
+### 3. Listado de entidades
+GET {{host}}/api/entities
+Authorization: Bearer {{token}}
+
+### 3b. Listado con búsqueda y filtro
+GET {{host}}/api/entities?search=a&entityTypeId=1
+Authorization: Bearer {{token}}
+
+### 4. Detalle con teléfonos
+GET {{host}}/api/entities/1
+Authorization: Bearer {{token}}
+
+### 5. Alta de persona natural
+# @name create
+POST {{host}}/api/entities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "entityTypeId": 1,
+  "documentTypeId": 1,
+  "documentNumber": "44556677",
+  "email": "prueba@ccs.pe",
+  "address": "Arequipa 123",
+  "names": "Persona",
+  "paternalSurname": "Prueba",
+  "maternalSurname": "Demo",
+  "age": 30,
+  "sex": "M",
+  "phones": [
+    { "number": "999888777", "label": "Móvil" }
+  ]
+}
+
+@newId = {{create.response.body.$.id}}
+
+### 5b. Alta con documento duplicado (esperado: 409)
+POST {{host}}/api/entities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "entityTypeId": 1,
+  "documentTypeId": 1,
+  "documentNumber": "44556677",
+  "names": "Persona",
+  "paternalSurname": "Prueba",
+  "maternalSurname": "Demo",
+  "age": 30,
+  "sex": "M"
+}
+
+### 5c. Alta de persona natural incompleta (esperado: 400)
+POST {{host}}/api/entities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "entityTypeId": 1,
+  "documentTypeId": 1,
+  "documentNumber": "44556678",
+  "names": "Persona",
+  "paternalSurname": "Prueba",
+  "age": 30,
+  "sex": "M"
+}
+
+### 6. Alta de persona jurídica
+POST {{host}}/api/entities
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "entityTypeId": 2,
+  "documentTypeId": 4,
+  "documentNumber": "20556677771",
+  "legalName": "Empresa Demo S.A.C.",
+  "tradeName": "Demo",
+  "contactName": "Ana Contacto",
+  "phones": [
+    { "number": "054765432", "label": "Central" }
+  ]
+}
+
+### 7. Modificación (esperado: 204)
+PUT {{host}}/api/entities/{{newId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "entityTypeId": 1,
+  "documentTypeId": 1,
+  "documentNumber": "44556677",
+  "email": "modificada@ccs.pe",
+  "address": "Arequipa 456",
+  "names": "Persona Editada",
+  "paternalSurname": "Prueba",
+  "maternalSurname": "Demo",
+  "age": 31,
+  "sex": "F",
+  "isActive": true,
+  "phones": [
+    { "number": "911222333", "label": "Móvil" }
+  ]
+}
+
+### 7b. Modificación sin isActive (esperado: 400)
+PUT {{host}}/api/entities/{{newId}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "entityTypeId": 1,
+  "documentTypeId": 1,
+  "documentNumber": "44556677",
+  "names": "Persona",
+  "paternalSurname": "Prueba",
+  "maternalSurname": "Demo",
+  "age": 31,
+  "sex": "F"
+}
+
+### 8. Baja (esperado: 204)
+DELETE {{host}}/api/entities/{{newId}}
+Authorization: Bearer {{token}}
+
+### 8b. Detalle tras la baja (esperado: 404)
+GET {{host}}/api/entities/{{newId}}
+Authorization: Bearer {{token}}

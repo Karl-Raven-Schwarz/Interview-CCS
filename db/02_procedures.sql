@@ -48,6 +48,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT  e.Id,
+            e.EntityTypeId,
             et.Code      AS EntityTypeCode,
             et.Name      AS EntityTypeName,
             et.Category  AS EntityCategory,
@@ -102,6 +103,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT  e.Id,
+            e.EntityTypeId,
             et.Code      AS EntityTypeCode,
             et.Name      AS EntityTypeName,
             et.Category  AS EntityCategory,

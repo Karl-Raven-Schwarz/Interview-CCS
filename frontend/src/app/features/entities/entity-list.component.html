@@ -1,0 +1,141 @@
+<div class="card card-ccs">
+  <div class="card-body">
+    <!-- Barra de herramientas -->
+    <div class="row g-2 align-items-end">
+      <div class="col-12 col-lg-5">
+        <label class="form-label" for="search">Buscar</label>
+        <input
+          id="search"
+          type="search"
+          class="form-control"
+          placeholder="Documento, nombres o razón social"
+          [(ngModel)]="search"
+          (keyup.enter)="load()" />
+      </div>
+      <div class="col-8 col-lg-3">
+        <label class="form-label" for="entityType">Tipo de entidad</label>
+        <select id="entityType" class="form-select" [(ngModel)]="entityTypeId" (ngModelChange)="load()">
+          <option [ngValue]="null">Todos</option>
+          @for (type of entityTypes(); track type.id) {
+            <option [ngValue]="type.id">{{ type.name }}</option>
+          }
+        </select>
+      </div>
+      <div class="col-4 col-lg-2">
+        <button type="button" class="btn btn-outline-secondary w-100" (click)="load()">
+          <i class="bi bi-search me-1"></i>Buscar
+        </button>
+      </div>
+      <div class="col-12 col-lg-2">
+        <a class="btn btn-brand w-100" routerLink="/entities/new">
+          <i class="bi bi-plus-lg me-1"></i>Nueva
+        </a>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="mx-3 mb-3 alert alert-danger py-2 small" role="alert">
+      <i class="bi bi-exclamation-triangle me-1"></i>{{ error() }}
+    </div>
+  }
+
+  <!-- Tabla de entidades -->
+  <div class="table-responsive">
+    <table class="table table-ccs align-middle">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Documento</th>
+          <th>Contacto</th>
+          <th>Estado</th>
+          <th class="text-end">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loading()) {
+          <tr>
+            <td colspan="6" class="text-center text-secondary py-5">
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              Cargando entidades...
+            </td>
+          </tr>
+        } @else if (items().length === 0) {
+          <tr>
+            <td colspan="6" class="text-center text-secondary py-5">
+              No hay entidades que coincidan con la búsqueda.
+            </td>
+          </tr>
+        } @else {
+          @for (item of items(); track item.id) {
+            <tr>
+              <td>
+                <div class="fw-semibold">{{ item.displayName }}</div>
+                @if (item.email) {
+                  <div class="small text-secondary">{{ item.email }}</div>
+                }
+              </td>
+              <td>
+                <span class="badge-soft rounded-pill" [class]="item.entityCategory === 'N' ? 'badge-soft-primary' : 'badge-soft-secondary'">
+                  {{ item.entityCategory === 'N' ? 'Natural' : 'Jurídica' }}
+                </span>
+                <div class="small text-secondary mt-1">{{ item.entityTypeName }}</div>
+              </td>
+              <td>
+                <span class="badge-soft badge-soft-secondary rounded-pill me-1">
+                  {{ item.documentTypeCode }}
+                </span>
+                {{ item.documentNumber }}
+              </td>
+              <td>
+                <div>{{ item.email || '—' }}</div>
+                <div class="small text-secondary">{{ item.phoneCount }} teléfono(s)</div>
+              </td>
+              <td>
+                @if (item.isActive) {
+                  <span class="badge-soft badge-soft-success rounded-pill">Activo</span>
+                } @else {
+                  <span class="badge-soft badge-soft-danger rounded-pill">Inactivo</span>
+                }
+              </td>
+              <td class="text-end text-nowrap">
+                <a class="btn btn-sm btn-outline-secondary me-1" [routerLink]="['/entities', item.id, 'edit']">
+                  <i class="bi bi-pencil me-1"></i>Editar
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="pendingDelete.set(item)">
+                  <i class="bi bi-trash me-1"></i>Eliminar
+                </button>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Confirmación de borrado -->
+@if (pendingDelete(); as item) {
+  <div class="app-backdrop"></div>
+  <div
+    class="position-fixed top-50 start-50 translate-middle card card-ccs p-4"
+    style="z-index: 1050; width: min(420px, 92vw)">
+    <h2 class="h6 fw-semibold mb-2">Eliminar entidad</h2>
+    <p class="small text-secondary mb-4">
+      ¿Seguro que deseas eliminar a <strong>{{ item.displayName }}</strong>? Esta acción no se puede
+      deshacer.
+    </p>
+    <div class="d-flex justify-content-end gap-2">
+      <button type="button" class="btn btn-outline-secondary" (click)="pendingDelete.set(null)">
+        Cancelar
+      </button>
+      <button type="button" class="btn btn-danger" [disabled]="deleting()" (click)="confirmDelete()">
+        @if (deleting()) {
+          <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+        }
+        Eliminar
+      </button>
+    </div>
+  </div>
+}
