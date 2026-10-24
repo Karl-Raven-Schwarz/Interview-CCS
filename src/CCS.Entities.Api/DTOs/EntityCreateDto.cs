@@ -20,7 +20,9 @@ public class EntityCreateDto
     [StringLength(20, MinimumLength = 6, ErrorMessage = "El número de documento debe tener entre 6 y 20 caracteres.")]
     public string DocumentNumber { get; set; } = string.Empty;
 
+    // El CHECK CK_Entity_Email de la base exige algo@algo.xx; [EmailAddress] solo pide una '@'.
     [EmailAddress(ErrorMessage = "El correo no tiene un formato válido.")]
+    [RegularExpression(@"^[^@\s]+@[^@\s]+\.[A-Za-z]{2,}$", ErrorMessage = "El correo no tiene un formato válido.")]
     [StringLength(120, ErrorMessage = "El correo no puede exceder 120 caracteres.")]
     public string? Email { get; set; }
 

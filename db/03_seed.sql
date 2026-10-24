@@ -47,7 +47,6 @@ IF NOT EXISTS (SELECT 1 FROM dbo.Entity)
 BEGIN
     DECLARE @Id INT;
 
-    /* Persona natural 1 */
     EXEC dbo.sp_Entity_Insert
         @EntityTypeId    = 1,
         @DocumentTypeId  = 1,
@@ -62,7 +61,7 @@ BEGIN
         @PhonesJson      = N'[{"number":"987654321","label":"Móvil"},{"number":"054287654","label":"Casa"}]',
         @NewId           = @Id OUTPUT;
 
-    /* Persona natural 2 */
+
     EXEC dbo.sp_Entity_Insert
         @EntityTypeId    = 1,
         @DocumentTypeId  = 1,
@@ -77,7 +76,7 @@ BEGIN
         @PhonesJson      = N'[{"number":"999111222","label":"Móvil"}]',
         @NewId           = @Id OUTPUT;
 
-    /* Persona natural 3 */
+
     EXEC dbo.sp_Entity_Insert
         @EntityTypeId    = 1,
         @DocumentTypeId  = 1,
@@ -92,7 +91,7 @@ BEGIN
         @PhonesJson      = N'[{"number":"988777666","label":"Oficina"}]',
         @NewId           = @Id OUTPUT;
 
-    /* Empresa (persona jurídica) */
+
     EXEC dbo.sp_Entity_Insert
         @EntityTypeId   = 2,
         @DocumentTypeId = 4,
@@ -105,7 +104,7 @@ BEGIN
         @PhonesJson     = N'[{"number":"054345678","label":"Central"},{"number":"900111333","label":"Ventas"}]',
         @NewId          = @Id OUTPUT;
 
-    /* Institución pública (el "etc." del enunciado) */
+
     EXEC dbo.sp_Entity_Insert
         @EntityTypeId   = 3,
         @DocumentTypeId = 4,

@@ -1,9 +1,5 @@
 namespace CCS.Entities.Api.Common;
 
-/// <summary>
-/// Clasificación del error. Se usa para decidir el código HTTP de la respuesta
-/// sin lanzar excepciones por control de flujo.
-/// </summary>
 public enum ErrorType
 {
     /// <summary>Error no esperado (500 Internal Server Error).</summary>
@@ -16,5 +12,8 @@ public enum ErrorType
     NotFound = 2,
 
     /// <summary>Conflicto con el estado actual (409 Conflict), p. ej. documento duplicado.</summary>
-    Conflict = 3
+    Conflict = 3,
+
+    /// <summary>Credenciales inválidas o falta autorización (401 Unauthorized).</summary>
+    Unauthorized = 4
 }
